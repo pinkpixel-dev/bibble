@@ -2,6 +2,91 @@
 
 All notable changes to the Bibble project will be documented in this file.
 
+## [1.8.9] - 2025-09-20
+
+### 🎭 Personality-Driven Fun Responses
+
+- Replaced the commit poetry and roast me built-in tools with native prompt guidance so the agent delivers poems and playful roasts without extra tool calls.
+- Folded the Git commit poetry structure and roast tone directly into the system prompt using the original Pink Pixel examples for consistent voice.
+- Cleaned up the tool registry, client display logic, and documentation to reflect the personality-driven implementation.
+- Removed the generate-ascii-art fun tool so playful terminal flair now lives entirely in the splash/branding system.
+- Reworked the enhanced research agent to orchestrate `web_search`, `quick_web_search`, and `extract_content` workflows instead of relying on the deprecated comprehensive research tool family.
+
+---
+
+## [1.8.8] - 2025-09-19
+
+### 🎉 NEW HACKATHON FUN TOOLS - Git Commit Poetry & Roast Me
+
+Added two delightful new entertainment tools perfect for the "For the Love of Code" hackathon, specifically designed for the **Terminal Talent** category!
+
+#### 🎭 **Git Commit Poetry Tool** (deprecated in 1.8.9)
+
+Transform boring Git commit messages into delightful poems with whimsical AI-powered poetry generation.
+
+**Features:**
+- **Poetic Transformation**: Converts any Git commit message into a short, fun poem (2-6 lines)
+- **Meaning Preservation**: Always preserves the core technical meaning while adding playful poetic language
+- **Mixed Metaphors**: Combines coding/tech metaphors with natural imagery ("bugs scuttling away," "branches blooming")
+- **Self-Contained**: Poems are fun to read whether you understand Git or not
+- **Examples**: 
+  - `fix null pointer error in auth flow` → *"A phantom bug slipped through the gate, Null's dark hand met its fate..."*
+  - `add dark mode toggle to settings` → *"A twilight switch now shines with grace, Night unfurls across the interface..."*
+
+**Usage:**
+```bash
+# Transform any commit message into poetry
+> Can you turn "fix memory leak in cache system" into a poem?
+🎭 The commit poetry tool will create a delightful poem!
+```
+
+#### 🔥 **Roast Me Tool** (deprecated in 1.8.9)
+
+Get witty, harmless roasts for entertainment with customizable spice levels!
+
+**Features:**
+- **Three Spice Levels**: `mild` (gentle teasing), `medium` (standard roast), `spicy` (extra snarky)
+- **General Life Roasts**: Focuses on personality/life roasts, not tech-related ones
+- **Clever & Memorable**: Short (1-3 sentences), witty, and quotable roasts
+- **Harmless Fun**: All roasts designed to be humorous entertainment, not hurtful
+- **Example Roasts**: 
+  - *"You have a face that would make onions cry."*
+  - *"If ignorance is bliss, you must be the happiest person on Earth."*
+  - *"You're not simply a drama queen/king. You're the whole royal family."*
+
+**Usage:**
+```bash
+# Get a roast with different intensity levels
+> Roast me!
+🔥 The roast me tool will deliver a clever, witty roast!
+
+# Specify spice level and target
+> Give me a spicy roast
+> Roast my friend Alex with mild teasing
+```
+
+#### 🏆 **Perfect for Hackathon**
+
+**Terminal Talent Category Excellence:**
+- **Personality in CLI**: Adds character and humor to terminal interactions
+- **Interactive Entertainment**: Makes the command-line feel more alive and engaging
+- **Creative AI Integration**: Showcases creative use of AI for entertainment
+- **Memorable Experience**: Creates shareable, quotable moments
+
+**Technical Implementation:**
+- **Built-in Tool Integration**: Seamlessly integrated with Bibble's existing tool system
+- **Enhanced Tool Display**: Beautiful formatting with Pink Pixel themed output
+- **Parameter Validation**: Full Zod schema validation with proper error handling
+- **Professional Architecture**: Consistent with existing tool patterns and interfaces
+
+**Developer Experience:**
+- **Easy Discovery**: Both tools automatically available in fun tool category
+- **Consistent Interface**: Uses standard BuiltInTool interface for reliability
+- **Error Resilience**: Graceful error handling with helpful feedback messages
+- **TypeScript Integration**: Full type safety and IntelliSense support
+
+---
+
 ## [1.8.7] - 2025-09-18
 
 ### 🔧 BUG FIX - Built-in Tool Parameter Validation

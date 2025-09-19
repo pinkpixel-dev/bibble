@@ -8,7 +8,7 @@ import stringifyPretty from 'json-stringify-pretty-compact';
 import terminalLink from 'terminal-link';
 import cliTruncate from 'cli-truncate';
 import { theme } from './theme.js';
-import { chatSymbols, s } from './symbols.js';
+import { chatSymbols, symbols, s } from './symbols.js';
 import { BibbleTable } from './tables.js';
 import { z } from 'zod';
 
@@ -127,7 +127,11 @@ export class EnhancedToolDisplay {
     execution.endTime = new Date();
 
     console.log(this.createToolHeader(execution.toolName, status, execution.startTime, execution.endTime));
-    console.log(this.createResultsSection(result, execution.toolName, opts));
+
+    const suppressResults = this.shouldSuppressResults(execution.toolName, result);
+    if (!suppressResults) {
+      console.log(this.createResultsSection(result, execution.toolName, opts));
+    }
 
     // separator
     const width = Math.min(process.stdout.columns || 80, 80);
@@ -142,29 +146,33 @@ export class EnhancedToolDisplay {
     this.activeExecutions.delete(executionId);
   }
 
+  private shouldSuppressResults(toolName: string, result: unknown): boolean {
+    return false;
+  }
+
   private createToolHeader(
     toolName: string,
     status: ToolStatus,
     startTime?: Date,
     endTime?: Date
   ): string {
-    let statusIcon = chatSymbols.status.loading;
+    let statusIcon = theme.cyan(symbols.circle);
     let statusColor = theme.cyan;
     let statusText = 'Running';
 
     switch (status) {
       case 'success':
-        statusIcon = chatSymbols.status.success;
+        statusIcon = theme.ok(symbols.tick);
         statusColor = theme.ok;
         statusText = 'Success';
         break;
       case 'error':
-        statusIcon = chatSymbols.status.error;
+        statusIcon = theme.err(symbols.cross);
         statusColor = theme.err;
         statusText = 'Error';
         break;
       case 'cancelled':
-        statusIcon = chatSymbols.status.warning;
+        statusIcon = theme.warn(symbols.warning);
         statusColor = theme.warn;
         statusText = 'Cancelled';
         break;

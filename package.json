@@ -1,6 +1,6 @@
 {
   "name": "@pinkpixel/bibble",
-  "version": "1.8.7",
+  "version": "1.8.8",
   "description": "An AI agent/chatbot with built-in tools and MCP support that lives in your terminal",
   "type": "module",
   "main": "dist/index.js",

@@ -2,10 +2,10 @@
 
 Bibble is a sophisticated command-line interface (CLI) chatbot application that integrates with multiple language model providers and supports the Model Context Protocol (MCP) for enhanced functionality through external tools. Built with TypeScript, it provides a robust terminal-based AI assistant experience with comprehensive tool integration.
 
-**Version**: 1.8.7
+**Version**: 1.8.8
 **Author**: Pink Pixel  
 **NPM Package**: @pinkpixel/bibble  
-*Last updated: September 19, 2025 - 03:55 UTC*
+*Last updated: September 19, 2025 - 04:49 UTC*
 
 **🏆 GitHub Hackathon Contender** - Strong candidate for "For the Love of Code" GitHub hackathon submission (deadline: September 22, 2025) - fits perfectly in **Terminal Talent**, **Agents of Change**, and **Everything but the kitchen sink** categories with exceptional technical innovation and visual excellence
 
@@ -974,6 +974,16 @@ Version 1.8.2 introduces **exciting fun tools** specifically designed for the "F
   - Multiple APIs with intelligent fallbacks (Random Cat, The Cat API, Cats as a Service)
   - Configurable sizes (small, medium, large) with actual image display in terminal
   - Multiple API rotation for variety and reliability, with optional API key support for higher rate limits
+- **🎭 Git Commit Poetry** (built-in personality)
+  - Transform boring Git commit messages into delightful four-line poems directly in conversation
+  - Preserves core technical meaning while adding whimsical poetic language grounded in commit context
+  - Mixes coding/tech metaphors with natural imagery for creative expression without invoking extra tools
+  - Self-contained poems that are fun to read regardless of Git knowledge
+- **🔥 Playful Roasts** (built-in personality)
+  - Craft witty, harmless roasts for entertainment on demand without relying on a dedicated tool
+  - Keeps the teasing gentle by default while still landing a memorable punch line
+  - Focuses on general personality/life roasts with clever, quotable one-liners inspired by Pink Pixel prompts
+  - Designed for harmless fun that fits naturally into the agent's chat persona
 
 **🏆 Hackathon Highlights:**
 - **Terminal Talent**: Stunning visual effects, ASCII art, AND real image display in pure terminal environment

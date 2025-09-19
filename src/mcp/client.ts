@@ -461,21 +461,27 @@ export class McpClient {
                 // Convert built-in tool result to expected format
                 let content = '';
                 if (result.success) {
-                    // Prefer structured data so UI can render tables consistently
-                    if (result.data) {
-                        content = this.formatBuiltInToolResult(result.data, toolName);
-                        if (result.message) {
-                            content = content + "\n\n" + result.message;
-                        }
-                    } else if (result.message) {
-                        content = result.message;
-                    } else {
-                        content = 'Tool executed successfully';
+                    const segments: string[] = [];
+                    if (result.message) {
+                        segments.push(result.message);
                     }
+
+                    if (result.data !== undefined) {
+                        const formatted = this.formatBuiltInToolResult(result.data, toolName);
+                        if (formatted && formatted.trim().length > 0) {
+                            segments.push(formatted);
+                        }
+                    }
+
+                    if (segments.length === 0) {
+                        segments.push('Tool executed successfully');
+                    }
+
+                    content = segments.join('\n\n');
                 } else {
                     content = result.error || 'Tool execution failed';
                 }
-                
+
                 return {
                     content: content
                 };

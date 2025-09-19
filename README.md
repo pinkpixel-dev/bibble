@@ -29,7 +29,7 @@ Bibble is a command-line interface (CLI) chatbot application built in TypeScript
 - MCP client functionality for connecting to MCP-compatible servers
 - **🌐 BUILT-IN WEB SEARCH & RESEARCH TOOLS** - Multi-engine search with intelligent fallbacks
 - **🔍 Comprehensive Web Search** - DuckDuckGo, Bing, Google, and Brave integration with AI-powered query enhancement
-- **🧠 Advanced Research Assistant** - Event-driven research sessions with content extraction and analysis
+- **🧠 Advanced Research Assistant** - Orchestrated workflows that combine built-in web search and content extraction for thorough answers
 - **⚡ Quick Search Tools** - Fast information retrieval without external MCP server setup
 - Settings and configuration options accessible from the CLI
 - Detailed error handling and user feedback
@@ -182,21 +182,23 @@ These enhancements make working with MCP tools more intuitive and visually appea
 
 ### Available Built-In Web Tools
 
-1. **🔍 Web Search Tool** (`web-search`)
+1. **🔍 Web Search Tool** (`web_search`)
    - Multi-engine search with DuckDuckGo, Bing, Google, and Brave fallbacks
    - Configurable result counts and search depth
    - Real-time progress monitoring
    - Clean, formatted search results with metadata
 
-2. **⚡ Quick Search Tool** (`quick-search`)
+2. **⚡ Quick Search Tool** (`quick_web_search`)
    - Fast single-query searches for immediate answers
    - Streamlined interface for rapid information retrieval
    - Minimal processing overhead for speed
 
-3. **📊 Research Session Status** (`research-status`)
+3. **📊 Research Session Status** (`research_status`)
    - Monitor ongoing research operations
    - Progress visualization and session management
    - Result aggregation and consolidated findings
+
+The prior comprehensive research tool family has been retired; Bibble now routes every deep-dive request through these core tools, letting the enhanced research agent sequence searches, follow-ups, and content extraction as a single workflow.
 
 ### Configure Web Search Engines
 
@@ -223,7 +225,7 @@ Once you start Bibble, the web search tools are automatically available. Simply 
 Or explicitly request web search:
 ```
 > Can you search for information about TypeScript 5.0 features?
-🌐 Bibble will use web-search tool to find current information...
+🌐 Bibble will use the `web_search` tool to find current information...
 ```
 
 ### Environment Variables
