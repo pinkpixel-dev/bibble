@@ -85,9 +85,7 @@ With support for OpenAI, Anthropic, Google Gemini, and OpenAI-compatible API end
 See Bibble's tool-calling agent capabilities in action:
 
 <p align="center">
-  <a href="https://youtu.be/06RB3ytBRms">
-    <img src="https://img.youtube.com/vi/06RB3ytBRms/maxresdefault.jpg" alt="Bibble Demo Video" width="600"/>
-  </a>
+  <iframe width="560" height="315" src="https://www.youtube.com/embed/06RB3ytBRms?si=AICaptgkEqKKSa0H" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 </p>
 
 ### 🐱 Cat Images with Terminal Display
