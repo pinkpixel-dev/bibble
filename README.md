@@ -2,10 +2,12 @@
   <img src="https://res.cloudinary.com/di7ctlowx/image/upload/v1747791202/bibble-logo_ykiwbq.png" alt="Bibble Logo" width="350"/>
 </p>
 
-# Bibble - CLI Chatbot with MCP Integration
+# Bibble - AI-Powered Tool-Calling Agent & Terminal Assistant
+
+> **🏆 GitHub "For the Love of Code" Hackathon Entry**
 
 [![npm version](https://img.shields.io/npm/v/@pinkpixel/bibble.svg)](https://www.npmjs.com/package/@pinkpixel/bibble)
-[![License: ISC](https://img.shields.io/badge/License-ISC-blue.svg)](https://opensource.org/licenses/ISC)
+[![License: Apache 2.0](https://img.shields.io/badge/License-ISC-blue.svg)](https://opensource.org/license/apache-2-0)
 [![Node.js Version](https://img.shields.io/badge/node-%3E%3D16.0.0-brightgreen.svg)](https://nodejs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-blue.svg)](https://www.typescriptlang.org/)
 [![MCP Compatible](https://img.shields.io/badge/MCP-Compatible-purple.svg)](https://modelcontextprotocol.io/)
@@ -15,39 +17,91 @@
 [![CLI Tool](https://img.shields.io/badge/CLI-Tool-yellow.svg)](https://github.com/pinkpixel-dev/bibble)
 [![Streaming](https://img.shields.io/badge/Real--time-Streaming-red.svg)](https://github.com/pinkpixel-dev/bibble)
 [![Made with ❤️](https://img.shields.io/badge/Made%20with-❤️-pink.svg)](https://pinkpixel.dev)
-[![GitHub Stars](https://img.shields.io/github/stars/sizzlebop/bibble?style=social)](https://github.com/pinkpixel-dev/bibble/stargazers)
-[![GitHub Forks](https://img.shields.io/github/forks/sizzlebop/bibble?style=social)](https://github.com/pinkpixel-dev/bibble/network/members)
 
-Bibble is a command-line interface (CLI) chatbot application built in TypeScript that runs directly in your terminal. It supports OpenAI, Anthropic, Google Gemini, and OpenAI-compatible API endpoints, implements real-time response streaming, maintains chat memory, and functions as an MCP (Model Context Protocol) client.
+Bibble is far more than a simple chatbot - it's a sophisticated AI-powered tool-calling agent that transforms your terminal into an intelligent workspace. Built in TypeScript, Bibble can execute multi-step workflows, call tools autonomously until tasks are complete, and seamlessly integrate with your development environment through intelligent workspace detection.
 
-## Features
+With support for OpenAI, Anthropic, Google Gemini, and OpenAI-compatible API endpoints, Bibble combines real-time response streaming, persistent chat memory, and extensive tool integration to create a truly powerful terminal assistant.
 
-- Launch as a chat instance via the CLI command `bibble`
-- Support for OpenAI, Anthropic (Claude models), Google Gemini, and OpenAI-compatible API endpoints
-- Real-time response streaming of model output
-- Contextual multi-turn conversations with chat memory
-- MCP client functionality for connecting to MCP-compatible servers
-- **🌐 BUILT-IN WEB SEARCH & RESEARCH TOOLS** - Multi-engine search with intelligent fallbacks
-- **🔍 Comprehensive Web Search** - DuckDuckGo, Bing, Google, and Brave integration with AI-powered query enhancement
-- **🧠 Advanced Research Assistant** - Orchestrated workflows that combine built-in web search and content extraction for thorough answers
-- **⚡ Quick Search Tools** - Fast information retrieval without external MCP server setup
-- Settings and configuration options accessible from the CLI
-- Detailed error handling and user feedback
-- **🎨 Beautiful Pink Pixel themed terminal interface with gorgeous ASCII banners**
-- **📊 Stunning table displays for configuration and data with smart color coding**
-- **🌈 Gradient text effects and role-based chat styling**
-- **🧰 Enhanced interactive tool display system with status badges and syntax highlighting**
-- **🐱 Advanced Cat Images Tool** - Real terminal image display using @pinkpixel/pixelpop with animated GIF support
-- Colored text output and markdown rendering
-- Chat history storage and retrieval
-- Model switching capabilities
-- Configurable system prompts and user guidelines
+## 🚀 Core Capabilities
+
+### 🤖 Intelligent Tool-Calling Agent
+- **Multi-Step Workflow Execution** - Bibble autonomously chains tool calls until complex tasks are completed
+- **Intelligent Task Planning** - Breaks down requests into actionable steps and executes them systematically
+- **Contextual Decision Making** - Uses conversation history and workspace context to make smart tool choices
+- **Persistent Task Memory** - Maintains context across tool calls for coherent multi-step operations
+
+### 🛠️ Comprehensive Built-In Tool Suite
+
+#### 📁 **File System & Development Tools**
+- **File Operations** - Read, write, create, delete, and manage files and directories
+- **Code Analysis** - Examine codebases, analyze structure, and understand project layouts
+- **Workspace Intelligence** - Automatic detection of project types, languages, and configurations
+- **Git Integration** - Repository analysis and commit message enhancement
+
+#### 🌐 **Web Search & Research Tools**
+- **Multi-Engine Web Search** - DuckDuckGo, Bing, Google, and Brave integration with intelligent fallbacks
+- **AI-Powered Query Enhancement** - Smart query optimization for better search results
+- **Advanced Research Assistant** - Orchestrated workflows combining search and content extraction
+- **Content Extraction** - Intelligent web scraping with rate limiting and parsing
+
+#### 🌤️ **Information & Data Tools**
+- **Weather & Climate Data** - Real-time weather information by location
+- **Date & Time Services** - Timezone-aware datetime operations and scheduling
+- **Hacker News Integration** - Fetch and analyze trending tech stories
+- **News & Current Events** - Stay updated with latest developments
+
+#### 💻 **System & Command Line Tools**
+- **Process Management** - Execute system commands and manage processes
+- **Environment Analysis** - System diagnostics and environment detection
+- **Terminal Operations** - Advanced terminal interactions and automation
+
+#### 🎭 **Fun & Personality Features**
+- **🐱 Cat Image Generator** - Fetch random cat images with terminal display using custom @pinkpixel/pixelpop package
+- **🎪 Roast Generator** - Ask Bibble to playfully roast you for entertainment
+- **📝 Git Poetry** - Transform boring commit messages into beautiful poetry
+- **🎨 ASCII Art & Animations** - Beautiful terminal graphics and animations
+
+### 🔌 **MCP Server Integration**
+- **Universal Tool Extension** - Connect to any MCP-compatible server to add custom tools
+- **User-Configurable** - Easy setup and management of external tool integrations
+- **Seamless Integration** - External tools work alongside built-in capabilities
+- **Community Ecosystem** - Leverage the growing MCP tool ecosystem
+
+### 🎨 **Premium Terminal Experience**
+- **Pink Pixel Theme** - Gorgeous branded interface with gradient effects
+- **Interactive Tool Displays** - Status badges, syntax highlighting, and progress indicators
+- **Image & GIF Rendering** - Display images and animated GIFs directly in terminal using custom @pinkpixel/pixelpop package
+- **Smart Tables & Lists** - Beautiful data presentation with color coding
+- **Real-time Streaming** - Live response streaming with visual feedback
+
+### ⚙️ **Advanced Configuration**
+- **Multi-Provider Support** - OpenAI, Anthropic, Google Gemini, and OpenAI-compatible endpoints
+- **Flexible Model Selection** - Switch between models and providers seamlessly
+- **Persistent Memory** - Chat history storage and retrieval
+- **Custom System Prompts** - Personalize AI behavior and guidelines
+
+## 🎬 Demo
+
+See Bibble's tool-calling agent capabilities in action:
+
+<p align="center">
+  <a href="https://youtu.be/06RB3ytBRms">
+    <img src="https://img.youtube.com/vi/06RB3ytBRms/maxresdefault.jpg" alt="Bibble Demo Video" width="600"/>
+  </a>
+</p>
+
+### 🐱 Cat Images with Terminal Display
+<p align="center">
+  <img src="./demos/cat-image.gif" alt="Cat Images Tool Demo" width="500"/>
+</p>
+
+*Powered by @pinkpixel/pixelpop - a custom terminal image rendering package built with Bibble in mind*
 
 ## Installation
 
 ### Prerequisites
 
-- Node.js v16 or higher
+- Node.js v20 or higher
 - npm v7 or higher
 
 ### Install from npm
@@ -169,9 +223,13 @@ Bibble v1.4.0 introduces a completely overhauled tool display system featuring:
 
 These enhancements make working with MCP tools more intuitive and visually appealing. The new display system can be toggled using environment variables if compatibility issues arise.
 
-## 🌐 Built-In Web Search & Research Tools
+<p align="center">
+  <img src="./demos/weather-datetime.gif" alt="Weather and DateTime Tools Demo" width="600"/>
+</p>
 
-**New in v1.7.0!** Bibble now includes comprehensive web search and research capabilities built directly into the application - no external MCP servers required!
+## 🌐 Built-In Tool Ecosystem
+
+**Bibble is a complete tool-calling agent** with an extensive suite of built-in capabilities that work together to handle complex, multi-step tasks autonomously.
 
 ### 🔍 Web Search Features
 
@@ -181,25 +239,49 @@ These enhancements make working with MCP tools more intuitive and visually appea
 - **Research Session Management**: Event-driven research workflows with progress tracking
 - **Cross-Platform Compatible**: Optimized for Windows environments with proper path handling
 
-### Available Built-In Web Tools
+<p align="center">
+  <img src="./demos/web-search.gif" alt="Web Search Demo" width="600"/>
+</p>
 
-1. **🔍 Web Search Tool** (`web_search`)
-   - Multi-engine search with DuckDuckGo, Bing, Google, and Brave fallbacks
-   - Configurable result counts and search depth
-   - Real-time progress monitoring
-   - Clean, formatted search results with metadata
+### 🛠️ Complete Built-In Tool Catalog
 
-2. **⚡ Quick Search Tool** (`quick_web_search`)
-   - Fast single-query searches for immediate answers
-   - Streamlined interface for rapid information retrieval
-   - Minimal processing overhead for speed
+#### 🌐 **Web & Research Tools**
+- **`web_search`** - Multi-engine search with intelligent fallbacks (DuckDuckGo, Bing, Google, Brave)
+- **`quick_web_search`** - Fast information retrieval for immediate answers
+- **`research_status`** - Monitor and manage ongoing research operations
+- **`web_scrape`** - Extract content from web pages with smart parsing
 
-3. **📊 Research Session Status** (`research_status`)
-   - Monitor ongoing research operations
-   - Progress visualization and session management
-   - Result aggregation and consolidated findings
+#### 📁 **File System Tools**
+- **`read_file`** - Read and analyze file contents
+- **`write_file`** - Create and modify files
+- **`list_directory`** - Explore directory structures
+- **`create_directory`** - Create new directories
+- **`delete_file`** - Remove files safely
+- **`file_search`** - Search for files by name or pattern
+
+#### 💻 **System & Command Tools**
+- **`execute_command`** - Run system commands and scripts
+- **`get_environment`** - Analyze system environment
+- **`process_management`** - Manage running processes
+- **`system_info`** - Get detailed system information
+
+#### 🌤️ **Information Services**
+- **`get_weather`** - Real-time weather data by location
+- **`get_datetime`** - Timezone-aware date and time operations
+- **`hacker_news`** - Fetch trending tech stories
+- **`news_search`** - Search current news and events
+
+#### 🎭 **Fun & Personality Tools**
+- **`cat_images`** - Fetch random cat images with terminal display
+- **`roast_user`** - Generate playful roasts for entertainment
+- **`git_poetry`** - Transform commit messages into poetry
+- **`ascii_art`** - Generate ASCII art and banners
 
 The prior comprehensive research tool family has been retired; Bibble now routes every deep-dive request through these core tools, letting the enhanced research agent sequence searches, follow-ups, and content extraction as a single workflow.
+
+<p align="center">
+  <img src="./demos/research.gif" alt="Research Assistant Demo" width="600"/>
+</p>
 
 ### Configure Web Search Engines
 
@@ -229,10 +311,23 @@ Or explicitly request web search:
 🌐 Bibble will use the `web_search` tool to find current information...
 ```
 
+### 🖼️ Terminal Image Rendering with @pinkpixel/pixelpop
+
+Bibble features advanced terminal image and GIF rendering capabilities powered by **@pinkpixel/pixelpop**, a custom package built specifically for this project:
+
+- **Direct Terminal Display** - Images and animated GIFs render directly in your terminal
+- **Cross-Platform Support** - Works across different terminal emulators
+- **Optimized Performance** - Efficient rendering with minimal resource usage
+- **Custom Built** - Designed from the ground up for Bibble's needs
+- **Open Source** - Available on npm and GitHub for the community
+
+*@pinkpixel/pixelpop is also available as a standalone package for other developers to use in their terminal applications.*
+
 ### Environment Variables
 
 - `BIBBLE_DISABLE_ENHANCED_TOOLS`: Set to `true` to disable enhanced tool displays
 - `BIBBLE_TOOL_DISPLAY_MODE`: Set to `basic`, `compact`, or `full` (default)
+- `BIBBLE_ENABLE_IMAGES`: Set to `false` to disable terminal image rendering
 
 ## Configuration
 
@@ -411,31 +506,7 @@ If you're still experiencing issues:
 
 ### Version Compatibility
 0
-- **Node.js 16+**: Required for all Bibble versions
-
-## Development
-
-### Project structure
-
-```
-/
-├── src/
-│   ├── commands/         # CLI command handlers
-│   ├── config/           # Configuration management
-│   ├── mcp/              # MCP client implementation
-│   ├── llm/              # LLM integration
-│   ├── tools/            # Built-in tools system
-│   │   └── built-in/
-│   │       └── web/      # Web search & research tools
-│   ├── ui/               # Terminal UI components
-│   ├── utils/            # Utility functions
-│   ├── index.ts          # Main entry point
-│   └── types.ts          # TypeScript type definitions
-├── bin/                  # Binary executable
-├── scripts/              # Helper scripts
-├── package.json          # NPM package definition
-└── tsconfig.json         # TypeScript configuration
-```
+- **Node.js >=20**: Required for all Bibble versions
 
 ### Build the project
 

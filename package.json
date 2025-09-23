@@ -3,14 +3,30 @@
   "name": "@pinkpixel/bibble",
   "version": "1.9.0",
   "description": "An AI agent/chatbot with built-in tools and MCP support that lives in your terminal",
+  "license": "Apache 2.0",
+  "author": "Pink Pixel",
+  "homepage": "https://npmjs.com/package/@pinkpixel/bibble",
   "type": "module",
   "main": "dist/index.js",
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
-  "bin": {
+    "bin": {
     "bibble": "bin/bibble-cli.cjs"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pinkpixel-dev/bibble",
+    "issues": "https://github.com/pinkpixel-dev/bibble/issues",
+    "organization": "pinkpixel-dev",
+    "owner": "sizzlebop"
+  },
+    "contributors": [
+    "Jessica Doering <admin@pinkpixel.dev>"
+  ],
+  "maintainers": [
+    "sizzlebop <admin@pinkpixel.dev>"
+  ],
   "scripts": {
     "build": "tsup src/index.ts --format esm --external commander,chalk,inquirer,markdown-it,openai,boxen,uuid,child_process,cross-spawn,@anthropic-ai/sdk,isbinaryfile,zod,zod-to-json-schema,cli-spinners",
     "dev": "tsup src/index.ts --format esm --dts --watch",
@@ -23,15 +39,6 @@
     "release": "npm run build && npm run lint && npm run typecheck && npm run test && npm run prepare && npm run postinstall && npm publish --access public",
     "prettier": "prettier --write ."
   },
-  "keywords": [
-    "cli",
-    "chatbot",
-    "mcp",
-    "ai",
-    "llm"
-  ],
-  "author": "Pink Pixel",
-  "license": "Apache 2.0",
   "dependencies": {
     "@anthropic-ai/sdk": "^0.61.0",
     "@google/generative-ai": "^0.24.1",
@@ -83,5 +90,50 @@
     "eslint-config-prettier": "^10.1.8",
     "tsup": "^8.5.0",
     "typescript-eslint": "^8.44.0"
-  }
+  },
+    "keywords": [
+    "ai",
+    "ai-agent",
+    "agent",
+    "agent-cli",
+    "anthropic",
+    "assistant",
+    "chat",
+    "chatbot",
+    "chatbot",
+    "claude",
+    "cli",
+    "command-line",
+    "command-line-interface",
+    "code",
+    "code-assistant",
+    "code-generation",
+    "code-review",
+    "coding",
+    "context",
+    "developer-assistant",
+    "developer",
+    "google",
+    "gpt",
+    "image-rendering",
+    "javascript",
+    "llm",
+    "llm-agent",
+    "mcp",
+    "mcp-agent",
+    "modelcontextprotocol",
+    "openai",
+    "openai-api",
+    "productivity",
+    "productivity-tool",
+    "productivity-assistant",
+    "terminal",
+    "terminal-assistant",
+    "terminal-chatbot",
+    "tools",
+    "tool-using-agent",
+    "typescript",
+    "typescript-cli",
+    "zod"
+  ]
 }
