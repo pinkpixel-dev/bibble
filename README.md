@@ -37,6 +37,7 @@ Bibble is a command-line interface (CLI) chatbot application built in TypeScript
 - **📊 Stunning table displays for configuration and data with smart color coding**
 - **🌈 Gradient text effects and role-based chat styling**
 - **🧰 Enhanced interactive tool display system with status badges and syntax highlighting**
+- **🐱 Advanced Cat Images Tool** - Real terminal image display using @pinkpixel/pixelpop with animated GIF support
 - Colored text output and markdown rendering
 - Chat history storage and retrieval
 - Model switching capabilities

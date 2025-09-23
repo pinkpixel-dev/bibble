@@ -2,6 +2,75 @@
 
 All notable changes to the Bibble project will be documented in this file.
 
+## [1.9.0] - 2025-01-27
+
+### 🎨 ENHANCED CAT IMAGES TOOL - PIXELPOP INTEGRATION & GIF SUPPORT
+
+Major upgrade to the cat images tool with advanced terminal image rendering and animated GIF support!
+
+#### 🐱 **Enhanced Cat Images Tool** (`random-cat-images`)
+
+**🔄 Package Migration:**
+- **Upgraded from `terminal-image`** to **`@pinkpixel/pixelpop`** for superior image rendering
+- **Enhanced Terminal Compatibility**: Auto-detects terminal capabilities (Kitty/iTerm2 native, or ANSI fallback)
+- **Better Performance**: Optimized rendering with improved memory management
+- **Cross-Platform Support**: Enhanced compatibility across different terminal environments
+
+**🎬 NEW: Animated GIF Support**
+- **GIF Animation Playback**: Displays animated GIFs directly in the terminal with smooth frame transitions
+- **Configurable Duration**: `gifSeconds` parameter (1-120 seconds) to control animation length
+- **Smart Frame Rate**: Balanced 24fps default for broad terminal compatibility
+- **Automatic Detection**: Intelligently detects GIF files and switches to animation mode
+- **Graceful Fallback**: Shows static frame if animation isn't supported
+
+**⚙️ Technical Improvements:**
+- **Adaptive Width Sizing**: Terminal-aware width adjustment based on capabilities
+  - Premium terminals (Kitty/iTerm2): 85%-100% width
+  - ANSI fallback terminals: 60%-70% width
+- **Enhanced Error Handling**: Better error messages and fallback strategies
+- **Crypto-based Randomization**: Uses Node.js crypto module for better API rotation
+- **Buffer Management**: Improved memory handling for large images and GIFs
+
+**🎯 User Experience Enhancements:**
+- **Visual Feedback**: Clear indication when GIF animation is playing
+- **Progress Information**: Shows animation duration and playback status
+- **Source Attribution**: Enhanced API source display with better formatting
+- **Tip Integration**: Helpful tips about API key configuration for higher rate limits
+
+**🔧 API Integration:**
+- **Multi-API Support**: Random Cat, The Cat API, Cats as a Service with intelligent fallbacks
+- **API Key Support**: Optional API key configuration for The Cat API (higher rate limits)
+- **Timeout Handling**: 8-second timeout with proper error recovery
+- **Smart Rotation**: Crypto-randomized API selection for variety
+
+#### 📚 **Documentation Updates**
+
+**Updated Tool Description:**
+- Enhanced description highlighting Pixelpop integration and GIF support
+- Clear parameter documentation for new `gifSeconds` option
+- Usage examples for both static images and animated GIFs
+
+**README.md Updates:**
+- Updated cat images tool description to mention Pixelpop and GIF support
+- Added information about enhanced terminal compatibility
+- Updated dependency information to reflect @pinkpixel/pixelpop usage
+
+#### 🏆 **Hackathon Excellence**
+
+**Perfect for "Terminal Talent" Category:**
+- **Advanced Terminal Graphics**: Real image and GIF rendering in pure terminal environment
+- **Technical Innovation**: Custom Pixelpop package showcasing advanced terminal capabilities
+- **Visual Spectacle**: Animated GIFs create memorable terminal experiences
+- **Cross-Platform Excellence**: Works beautifully across all major terminals
+
+**Benefits:**
+- **Enhanced Visual Experience**: Superior image quality and GIF animation support
+- **Better Performance**: Optimized rendering with reduced memory usage
+- **Improved Reliability**: Better error handling and fallback strategies
+- **Future-Ready**: Built on modern Pixelpop foundation for continued enhancements
+
+---
+
 ## [1.8.9] - 2025-09-20
 
 ### 🎭 Personality-Driven Fun Responses

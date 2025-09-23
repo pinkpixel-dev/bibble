@@ -86,7 +86,7 @@ export class Splash {
     
     // Add version info with status badge
     if (showVersion) {
-      const versionBadge = statusUtils.info('Version 1.8.7');
+      const versionBadge = statusUtils.info('Version 1.9.0');
       content += '\n' + versionBadge;
     }
     
@@ -138,7 +138,7 @@ export class Splash {
         }
 
         if (showVersion) {
-          const versionBadge = statusUtils.info('Version 1.8.7');
+          const versionBadge = statusUtils.info('Version 1.9.0');
           console.log(versionBadge);
         }
 
@@ -356,7 +356,7 @@ export class Splash {
       console.log('\n' + Splash.createSystemStatus({
         model,
         mcpServers,
-        version: '1.7.5',
+        version: '1.9.0',
         theme: 'Neon Dreams',
       }));
     }

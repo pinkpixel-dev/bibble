@@ -216,6 +216,41 @@ export async function searchBrave(query: string, numResults: number = 10, apiKey
   }
 }
 
+export async function runMultiSearch(
+  query: string,
+  args: {
+    depth: number;
+    engine?: 'auto' | 'custom' | 'google' | 'bing' | 'brave' | 'ddg';
+    engineOrder?: Array<'google' | 'bing' | 'brave' | 'ddg'>;
+    lang?: string;
+  }
+): Promise<Array<{ title: string; url: string; snippet?: string; source?: string }>> {
+  const targetResults = Math.max(args.depth * 2, 10);
+  const baseConfig = getSearchEngineConfig();
+  const overrides: Record<string, unknown> = {};
+
+  if (args.engine && args.engine !== 'auto' && args.engine !== 'custom') {
+    overrides.preferredEngine = args.engine === 'ddg' ? 'duckduckgo' : args.engine;
+  }
+
+  if (args.engineOrder && args.engineOrder.length > 0) {
+    overrides.engineOrder = args.engineOrder.map(engine => (engine === 'ddg' ? 'duckduckgo' : engine));
+  }
+
+  const results = await searchMultipleEngines(query, targetResults, {
+    ...baseConfig,
+    ...overrides,
+    language: args.lang ?? (baseConfig as any)?.language
+  });
+
+  return results.map(result => ({
+    title: result.title,
+    url: 'link' in result ? (result as any).link : result.url,
+    snippet: result.snippet,
+    source: result.source
+  }));
+}
+
 /**
  * Enhanced web scraping search as fallback
  */

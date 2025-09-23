@@ -1,0 +1,118 @@
+## Plan
+1. Use config maxFileSize in filesystem reads
+2 .Apply default encoding fallback
+3. Enforce search config policies
+4. Implement process maxConcurrent limit
+5. Apply edit createBackups default
+6. Optional JSON syntax validation
+7. Add registry policy helper
+8. Adjust config import
+9. Add debug config tool
+10. Update documentation
+11. Add tests for enforcement
+
+## Gap Analysis and Enforcement Plan
+
+**Config Enforcement Matrix**
+
+Filesystem (config.filesystem)
+- maxFileSize: NOT enforced dynamically. `safeReadFile` hardcodes `50 * 1024 * 1024` instead of using `configManager.getMaxFileSize()`.
+- allowedExtensions: Enforced via `isExtensionAllowed`.
+- blockedPaths: Enforced via `isPathSafe` + security defaults.
+- defaultEncoding: Not applied anywhere when user omits encoding; tools rely only on provided params.
+
+Process (config.process)
+- timeout: Enforced (`options.timeout || getProcessTimeout()`).
+- maxConcurrent: NOT enforced. No concurrency counter or semaphore.
+- allowedCommands / blockedCommands: Enforced in `isCommandSafe` / `isCommandAllowed`.
+- (Implicit) security defaults: Correct.
+
+Search (config.search)
+- maxResults: Not enforced globally; only user `params.maxResults` is used. `getMaxSearchResults()` is never called.
+- maxFileSize: Not enforced (search reads full file; no size gate).
+- defaultExcludes: Not automatically merged; only user `params.exclude` array is honored.
+
+Edit (config.edit)
+- createBackups: Not applied automatically. Backup depends solely on `write_file` tool’s `backup` parameter. Config default ignored.
+- maxUndoHistory: Not implemented (no undo stack).
+- validateSyntax: Not implemented (no validation hook before write/modify).
+
+Other Gaps / Observations
+- Hardcoded size string in error message (uses 50MB literal) will become misleading if user changes `filesystem.maxFileSize`.
+- No centralized clamping: A user can set `params.maxResults` above policy.
+- No rate limit tie‑in with configured values (not requested, but could be future enhancement).
+- No config-driven default encoding fallback in read/write when param omitted.
+
+**Recommended Fixes (Minimal & Direct)**
+
+1. Filesystem
+   - Replace hardcoded size check with dynamic `configManager.getMaxFileSize()`.
+   - Use config defaultEncoding when `params.encoding` is undefined.
+2. Search
+   - In each search tool, clamp `params.maxResults = Math.min(params.maxResults, configMgr.getMaxSearchResults())`.
+   - Auto‑merge config `defaultExcludes` with user `exclude` (user list taking precedence if conflicts).
+   - Skip files larger than `config.search.maxFileSize` before reading; mark them as skipped (optional status).
+3. Process
+   - Implement a lightweight in‑memory concurrency counter keyed to process executions; block (return error result) when active ≥ `config.process.maxConcurrent`.
+4. Edit
+   - In `write_file`, if `params.backup` is undefined, set it from `config.edit.createBackups`.
+   - (Optional scope) Add a pluggable syntax check if `validateSyntax` true:
+     - JSON: try `JSON.parse`.
+     - For others: skip (keep lean) or future extension.
+   - Undo/history: Defer unless you want it now (needs a ring buffer per path).
+5. Consistency / DX
+   - Central helper: `enforcePolicyOnParams(tool, params)` inside registry’s `executeTool` to apply clamping + defaults (search maxResults, write backup default, etc.).
+   - Replace static “Maximum allowed” message with formatting using active config value.
+6. Optional Debug Tool
+   - Add a built‑in tool `get_tool_config` returning effective (sanitized) built-in tools config for transparency.
+
+**Implementation Order (Proposed Checklist)**  
+1. Dynamic filesystem max file size & default encoding fallback  
+2. Search: clamp maxResults + merge defaultExcludes + file size skip  
+3. Process: add maxConcurrent guard  
+4. Edit: backup default + optional JSON syntax validation  
+5. Registry-level policy enforcement helper  
+6. (Optional) Add debug config inspection tool  
+
+**Example Snippets (Illustrative Only)**
+
+Filesystem size (safeReadFile):
+```ts
+const configMgr = getConfigManager();
+const maxSize = configMgr.getMaxFileSize();
+if (stats.size > maxSize) {
+  throw new Error(`File too large: ${formatBytes(stats.size)}. Maximum allowed: ${formatBytes(maxSize)}`);
+}
+```
+
+Search clamp (inside each execute):
+```ts
+const cfg = getConfigManager();
+params.maxResults = Math.min(params.maxResults, cfg.getMaxSearchResults());
+const defaultExcludes = cfg.getSection('search').defaultExcludes;
+const combinedExcludes = Array.from(new Set([...(defaultExcludes || []), ...params.exclude]));
+```
+
+Process concurrency (simple module-level tracker):
+```ts
+let activeProcesses = 0;
+async function guardedExecute(...) {
+  const cfg = getConfigManager();
+  if (activeProcesses >= cfg.getSection('process').maxConcurrent) {
+    throw new Error('Process concurrency limit reached');
+  }
+  activeProcesses++;
+  try { return await safeExecuteCommand(...); }
+  finally { activeProcesses--; }
+}
+```
+
+Write file backup default:
+```ts
+const cfg = getConfigManager();
+const backup = params.backup ?? cfg.getSection('edit').createBackups;
+```
+
+**Risk / Impact**
+- All changes are additive and policy‑tightening; they may cause previously “working” (but out-of-policy) requests to be rejected or truncated.
+- Concurrency cap may surface instantly if users run many process tools quickly.

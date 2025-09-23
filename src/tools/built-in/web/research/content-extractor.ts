@@ -9,11 +9,46 @@ import * as os from 'os';
 import * as fs from 'fs/promises';
 import * as path from 'path';
 import { v4 as uuidv4 } from 'uuid';
-import { 
-  ExtractedContent, 
-  ContentExtractor, 
-  MemoryStats 
+import {
+  ExtractedContent,
+  ContentExtractor,
+  MemoryStats
 } from '../types/index.js';
+
+let Readability: any;
+let JSDOM: any;
+
+async function ensureReadability(): Promise<void> {
+  if (Readability && JSDOM) return;
+  const readabilityModule = await import('@mozilla/readability');
+  const jsdomModule = await import('jsdom');
+  Readability = readabilityModule.Readability;
+  JSDOM = jsdomModule.JSDOM;
+}
+
+async function parseReadable(html: string, url: string): Promise<{ title: string; content: string } | null> {
+  try {
+    await ensureReadability();
+    const dom = new JSDOM(html, { url });
+    const reader = new Readability(dom.window.document);
+    const article = reader.parse();
+    if (!article?.textContent) {
+      const fallback = dom.window.document.body?.textContent?.trim();
+      if (!fallback) return null;
+      return {
+        title: article?.title || dom.window.document.title || 'Untitled',
+        content: fallback
+      };
+    }
+
+    return {
+      title: article.title || dom.window.document.title || 'Untitled',
+      content: article.textContent.replace(/\n{3,}/g, '\n\n').trim()
+    };
+  } catch {
+    return null;
+  }
+}
 
 /**
  * Rate limiter for content extraction requests
@@ -258,14 +293,26 @@ export class EnhancedWebContentExtractor implements ContentExtractor {
     if (html.length > this.MAX_IN_MEMORY_SIZE || memoryStats.usagePercentage > 70) {
       return this.processHtmlWithFile(html, url);
     } else {
-      return this.processHtmlInMemory(html);
+      return this.processHtmlInMemory(html, url);
     }
   }
 
   /**
    * Process HTML in memory (for smaller content)
    */
-  private processHtmlInMemory(html: string): { title: string; content: string } {
+  private async processHtmlInMemory(html: string, url: string): Promise<{ title: string; content: string }> {
+    const readable = await parseReadable(html, url);
+    if (readable?.content) {
+      return {
+        title: readable.title,
+        content: this.cleanText(readable.content)
+      };
+    }
+
+    return this.processHtmlWithCheerio(html);
+  }
+
+  private processHtmlWithCheerio(html: string): { title: string; content: string } {
     const $ = cheerio.load(html);
     
     // Extract title with multiple fallbacks
@@ -309,7 +356,7 @@ export class EnhancedWebContentExtractor implements ContentExtractor {
   /**
    * Process HTML using temporary file (for larger content)
    */
-  private async processHtmlWithFile(html: string, _url: string): Promise<{ title: string; content: string }> {
+  private async processHtmlWithFile(html: string, url: string): Promise<{ title: string; content: string }> {
     const tempFilePath = path.join(os.tmpdir(), `bibble-research-extract-${uuidv4()}.html`);
     this.tempFiles.push(tempFilePath);
     
@@ -318,7 +365,7 @@ export class EnhancedWebContentExtractor implements ContentExtractor {
       
       // Process the file
       const fileData = await fs.readFile(tempFilePath, 'utf-8');
-      const result = this.processHtmlInMemory(fileData);
+      const result = await this.processHtmlInMemory(fileData, url);
       
       // Clean up immediately
       await fs.unlink(tempFilePath);

@@ -5,13 +5,15 @@
 
 import { z } from 'zod';
 import { BuiltInTool } from '../../../ui/tool-display.js';
-import { 
-  WebSearchConfigSchema, 
-  WebSearchConfig,
-  ResearchConfig 
+import type { Engine, ResearchOptions } from '../../../research/research-pipeline.js';
+import { research } from '../../../research/research-pipeline.js';
+import { llm } from '../../../llm/adapter.js';
+import {
+  WebSearchConfigSchema,
+  WebSearchConfig
 } from './types/index.js';
 import { EnhancedResearchAgent } from './research/research-agent.js';
-import { searchMultipleEngines, getSearchEngineConfig } from './research/search-engine.js';
+import { runMultiSearch, searchMultipleEngines, getSearchEngineConfig } from './research/search-engine.js';
 
 // Global research agent instance
 let globalResearchAgent: EnhancedResearchAgent | null = null;
@@ -26,126 +28,71 @@ function getResearchAgent(): EnhancedResearchAgent {
   return globalResearchAgent;
 }
 
+function mapLegacyEngine(engine: 'duckduckgo' | 'bing' | 'google' | 'brave'): Engine {
+  if (engine === 'duckduckgo') return 'ddg';
+  return engine;
+}
+
 /**
  * Execute web search function implementation
  */
 async function executeWebSearch(params: WebSearchConfig): Promise<any> {
+  const researchAgent = getResearchAgent();
+  let tracker: ReturnType<EnhancedResearchAgent['beginSession']> | null = null;
+
   try {
-    // Starting web search
+    const legacyEngine = params.preferredEngine ? mapLegacyEngine(params.preferredEngine) : undefined;
+    const engine: Engine | undefined = (params.engine ?? legacyEngine) as Engine | undefined;
 
-    const researchAgent = getResearchAgent();
-    const searchEngineConfig = getSearchEngineConfig();
+    const pipelineOptions = {
+      depth: params.depth,
+      mode: params.mode,
+      format: params.format,
+      engine,
+      engineOrder: params.engine_order as Engine[] | undefined,
+      includeDomains: params.allowed_domains,
+      excludeDomains: params.blocked_domains,
+      dedupeByHost: params.dedupe_by_host,
+      maxConcurrency: params.max_concurrency,
+      minUsefulChars: params.min_useful_chars,
+      maxPerSourceChars: params.max_per_source_chars,
+      writeFile: params.write_file ? { path: params.write_file.path } : false,
+      languageHint: params.language,
+      searchProvider: runMultiSearch
+    } satisfies Partial<ResearchOptions>;
 
-    // Configure research based on parameters
-    const researchConfig: Partial<ResearchConfig> = {
-      maxSearches: params.maxSearches,
-      maxResultsPerSearch: params.maxResultsPerSearch,
-      maxContentExtractions: params.extractContent ? 8 : 0,
-      enableContentExtraction: params.extractContent,
-      enableFollowUpSearches: params.maxSearches > 1,
-      relevanceThreshold: 15,
-      timeoutMs: 90000, // 90 seconds for comprehensive search
-      // Pass per-call preferred engine override if provided
-      searchEngineOverrides: params.preferredEngine ? { preferredEngine: params.preferredEngine } : undefined
-    };
+    tracker = researchAgent.beginSession(params.query, pipelineOptions);
 
-    // Start research session
-    const session = await researchAgent.startResearch(params.query, researchConfig);
-    
-    // Wait for completion with timeout
-    const maxWaitTime = 120000; // 2 minutes maximum
-    const startTime = Date.now();
-    const pollInterval = 500; // Check every 500ms
+    const artifact = await research(params.query, llm, {
+      ...pipelineOptions,
+      onProgress: tracker.onProgress
+    });
 
-    while (
-      session.status !== 'completed' && 
-      session.status !== 'failed' && 
-      session.status !== 'insufficient_results'
-    ) {
-      if (Date.now() - startTime > maxWaitTime) {
-        await researchAgent.stopResearch(session.id);
-        return {
-          success: false,
-          error: 'Search timeout - research took too long to complete',
-          data: {
-            sessionId: session.id,
-            partialResults: researchAgent.getProgress(session.id)
-          }
-        };
-      }
-
-      // Wait before checking again
-      await new Promise(resolve => setTimeout(resolve, pollInterval));
-      
-      // Get updated session status
-      const currentSession = researchAgent.getSession(session.id);
-      if (currentSession) {
-        session.status = currentSession.status;
-        session.endTime = currentSession.endTime;
-      }
-    }
-
-    // Generate research context
-    const context = researchAgent.generateResearchContext(session.id);
-    
-    if (!context || !context.relevantContent) {
-      return {
-        success: false,
-        error: `Search completed but no relevant results found for "${params.query}". Try a different search query or check if the topic exists.`,
-        data: {
-          sessionId: session.id,
-          status: session.status,
-          searchesPerformed: session.searches?.length || 0,
-          totalResults: session.totalResults || 0
-        }
-      };
-    }
-
-    // Format comprehensive results for the LLM
-    const searchSummary = `WEB SEARCH RESULTS for "${params.query}":
-
-RESEARCH SUMMARY:
-- Search type: ${params.searchType}
-- Searches performed: ${session.searches?.length || 0}
-- Total results found: ${session.totalResults || 0}
-- Pages extracted: ${session.extractedContent?.length || 0}
-- Research confidence: ${context.confidence}%
-- Status: ${session.status}
-
-RELEVANT CONTENT:
-${context.relevantContent}
-
-SOURCES:
-${context.sources.slice(0, 12).map((source, i) => `${i + 1}. ${source}`).join('\n')}
-
-Search completed at ${new Date().toISOString()}`;
-
-    // Search completed successfully
+    tracker.complete(artifact);
 
     return {
       success: true,
       data: {
-        sessionId: session.id,
         query: params.query,
-        searchType: params.searchType,
-        status: session.status,
-        searchesPerformed: session.searches?.length || 0,
-        totalResults: session.totalResults || 0,
-        contentExtracted: session.extractedContent?.length || 0,
-        confidence: context.confidence,
-        sources: context.sources,
-        results: searchSummary
+        mode: artifact.mode,
+        format: artifact.format,
+        content: artifact.content,
+        sourcesAnalyzed: artifact.sourcesAnalyzed,
+        references: artifact.references,
+        summaries: artifact.summaries
       },
-      message: `Found comprehensive information about "${params.query}" with ${context.confidence}% confidence from ${context.sources.length} sources.`
+      message: `Produced a ${artifact.mode} research artifact with ${artifact.sourcesAnalyzed} sourced references.`
     };
 
   } catch (error) {
-    // Search failed
+    if (tracker) {
+      tracker.fail(error instanceof Error ? error : new Error(typeof error === 'string' ? error : 'Unknown error'));
+    }
     const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
-    
+
     return {
       success: false,
-      error: `Web search failed: ${errorMessage}. Please try again with a different query.`,
+      error: `Web search failed: ${errorMessage}. Please try again with a different query or adjust the parameters.`,
       data: {
         query: params.query,
         error: errorMessage

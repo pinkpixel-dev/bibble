@@ -79,7 +79,7 @@ export class AnimatedSplash {
           console.log(theme.dim(subtitle));
         }
         if (showVersion) {
-          console.log(theme.info('✨ Version 1.8.3'));
+          console.log(theme.info('✨ Version 1.9.0'));
         }
         console.log(theme.accent('\n💡 Type /help for chat commands\n'));
       }, animation.duration);
@@ -148,7 +148,7 @@ export class AnimatedSplash {
     if (showSubtitle) {
       setTimeout(() => {
         console.log(theme.dim('\nYour personal AI assistant that lives in your terminal'));
-        console.log(theme.info('✨ Version 1.8.3'));
+        console.log(theme.info('✨ Version 1.9.0'));
         console.log(theme.accent('\n💡 Type /help for chat commands'));
         console.log(theme.dim('\n🚀 Ready for magic!\n'));
       }, delays.subtitle || 4000);

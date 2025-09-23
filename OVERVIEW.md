@@ -2,10 +2,10 @@
 
 Bibble is a sophisticated command-line interface (CLI) chatbot application that integrates with multiple language model providers and supports the Model Context Protocol (MCP) for enhanced functionality through external tools. Built with TypeScript, it provides a robust terminal-based AI assistant experience with comprehensive tool integration.
 
-**Version**: 1.8.8
+**Version**: 1.9.0
 **Author**: Pink Pixel  
 **NPM Package**: @pinkpixel/bibble  
-*Last updated: September 19, 2025 - 04:49 UTC*
+*Last updated: September 20, 2025 - 06:11 UTC*
 
 **🏆 GitHub Hackathon Contender** - Strong candidate for "For the Love of Code" GitHub hackathon submission (deadline: September 22, 2025) - fits perfectly in **Terminal Talent**, **Agents of Change**, and **Everything but the kitchen sink** categories with exceptional technical innovation and visual excellence
 
@@ -868,6 +868,23 @@ Version 1.3.8 represented a **MAJOR VISUAL TRANSFORMATION** that converted Bibbl
 - **Visual Impact**: Complete transformation from plain terminal output to stunning Pink Pixel branded experience
 
 ## Recent Development & Research
+
+### Personality-Driven Fun Responses (v1.8.9) - September 20, 2025
+
+Version 1.8.9 introduces **personality-driven responses** that eliminate the need for dedicated fun tools by integrating creative capabilities directly into the AI's natural conversation style.
+
+**🎭 Native Personality Integration:**
+- **Git Commit Poetry**: AI now creates whimsical poems for Git commit messages through natural prompt guidance instead of separate tool calls
+- **Playful Roasts**: Delivers witty, harmless roasts as part of conversational personality without requiring dedicated tools
+- **Enhanced Research Workflows**: Reworked research agent to orchestrate `web_search`, `quick_web_search`, and `extract_content` workflows seamlessly
+- **Simplified Architecture**: Removed built-in ASCII art and poetry tools in favor of native personality-driven responses
+- **Cleaner Tool Registry**: Streamlined tool system focuses on functional capabilities while personality shines through conversation
+
+**🔬 Research Improvements Documentation Bundle:**
+- **Comprehensive Upgrade Plan**: Added detailed documentation bundle in `research_improvements/` for planned deep research enhancements
+- **Citation-Rich Pipeline**: Plans for advanced research capabilities with multi-engine search and intelligent content analysis
+- **Modular Architecture**: Designed to preserve existing multi-engine search while adding sophisticated research workflows
+- **Phase-Based Implementation**: Seven-phase upgrade plan with clear deliverables and timeline
 
 ### Enhanced Tool Context Management (v1.8.6) - January 10, 2025
 

@@ -142,6 +142,22 @@ export const WebSearchQuerySchema = z.string().min(1, 'Search query is required'
 
 export const WebSearchConfigSchema = z.object({
   query: z.string().min(1, 'Search query is required'),
+  allowed_domains: z.array(z.string()).optional(),
+  blocked_domains: z.array(z.string()).optional(),
+
+  engine: z.enum(['auto', 'custom', 'google', 'bing', 'brave', 'ddg']).optional(),
+  engine_order: z.array(z.enum(['google', 'bing', 'brave', 'ddg'])).optional(),
+  depth: z.number().int().min(1).max(20).default(6),
+  mode: z.enum(['snippet', 'summary', 'comprehensive']).default('comprehensive'),
+  format: z.enum(['markdown', 'html', 'text']).default('markdown'),
+  dedupe_by_host: z.boolean().default(true),
+  max_concurrency: z.number().int().min(1).max(8).optional(),
+  min_useful_chars: z.number().int().min(200).optional(),
+  max_per_source_chars: z.number().int().min(1000).optional(),
+  write_file: z.object({ path: z.string().min(1) }).optional(),
+  language: z.string().optional(),
+
+  // Legacy parameters kept for backwards compatibility with existing callers
   maxSearches: z.number().min(1).max(10).default(3),
   maxResultsPerSearch: z.number().min(5).max(50).default(10),
   extractContent: z.boolean().default(true),

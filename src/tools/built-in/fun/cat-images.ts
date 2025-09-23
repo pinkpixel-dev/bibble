@@ -1,13 +1,14 @@
 /**
  * Random Cat Images Tool
  *
- * Fetches random cat images and renders the image directly in the terminal
- * using ANSI image rendering (terminal-image). No more ASCII fallback – failures
- * are surfaced as errors so the user knows what went wrong.
+ * Fetches random cat images and renders them directly in the terminal
+ * using Pixelpop. Pixelpop auto-detects terminal capabilities (Kitty/iTerm2
+ * native, or ANSI fallback) and also supports animated GIF playback.
+ * Failures are surfaced as errors so the user knows what went wrong.
  */
 
 import { z } from 'zod';
-import terminalImage from 'terminal-image';
+import pixelPop from '@pinkpixel/pixelpop';
 import { theme } from '../../../ui/theme.js';
 import crypto from 'crypto';
 
@@ -15,7 +16,8 @@ import crypto from 'crypto';
 export const catImageSchema = z.object({
   count: z.number().min(1).max(5).optional().default(1).describe('Number of cat images to fetch (1-5)'),
   size: z.enum(['small', 'medium', 'large']).optional().default('medium').describe('Display size in terminal (maps to width)'),
-  api: z.enum(['thecatapi', 'cataas', 'randomcat', 'auto']).optional().default('auto').describe('Choose a specific API or auto rotate for variety')
+  api: z.enum(['thecatapi', 'cataas', 'randomcat', 'auto']).optional().default('auto').describe('Choose a specific API or auto rotate for variety'),
+  gifSeconds: z.number().min(1).max(120).optional().describe('If the image is a GIF, how many seconds to animate it')
 });
 
 export type CatImageParams = z.infer<typeof catImageSchema>;
@@ -111,16 +113,39 @@ function shuffleArray<T>(arr: T[]): T[] {
  * Fetch random cat images
  */
 export async function getRandomCatImages(params: CatImageParams): Promise<string> {
-  const { count, size, api } = params;
-  const width = size === 'small' ? 28 : size === 'large' ? 70 : 50;
+  const { count, size, api, gifSeconds } = params;
+  // Adaptive width by terminal capability
+  const width = getAdaptiveWidth(size);
   let output = theme.heading('🐱 Random Cat Images') + '\n\n';
 
   for (let i = 0; i < count; i++) {
     const { url, apiName } = await fetchCatImageUrl(api);
-    const imgBuf = await fetchImageBuffer(url);
-    const rendered = await terminalImage.buffer(imgBuf, { width });
+    const fetched = await fetchImageBuffer(url);
+    const isGif = /gif/i.test(fetched.contentType || '') || /\.gif($|\?)/i.test(url);
+    let rendered = '';
+
+    if (isGif) {
+      // For GIFs, play an animation for a short duration using Pixelpop
+      // Balanced default frame rate for broad compatibility
+      const stop = await pixelPop.gifBuffer(new Uint8Array(fetched.buffer), {
+        width,
+        maximumFrameRate: 24,
+        preserveAspectRatio: true,
+      });
+      // Show the animation for a few seconds so users actually see it
+      const seconds = typeof gifSeconds === 'number' ? gifSeconds : 6;
+      await delay(seconds * 1000);
+      stop();
+      rendered = theme.dim('(animated GIF played)');
+    } else {
+      // Static image rendering via Pixelpop with terminal-aware strategies
+      rendered = await pixelPop.buffer(new Uint8Array(fetched.buffer), {
+        width,
+        preserveAspectRatio: true,
+      });
+    }
     output += theme.subheading(`🐾 Cat ${i + 1}${count > 1 ? ` of ${count}` : ''}`) + '\n';
-    output += rendered + '\n';
+    if (rendered) output += rendered + '\n';
     output += theme.info(`🔗 ${url}`) + '\n';
     output += theme.secondary(`📦 Source: ${apiName}`) + '\n';
     if (i < count - 1) output += '\n' + theme.dim('─'.repeat(50)) + '\n\n';
@@ -132,11 +157,38 @@ export async function getRandomCatImages(params: CatImageParams): Promise<string
   return output;
 }
 
-async function fetchImageBuffer(url: string): Promise<Buffer> {
+async function fetchImageBuffer(url: string): Promise<{ buffer: Buffer; contentType?: string }> {
   const response = await fetch(url);
   if (!response.ok) throw new Error(`Image fetch failed (${response.status})`);
+  const contentType = response.headers.get('content-type') || undefined;
   const arrayBuf = await response.arrayBuffer();
-  return Buffer.from(arrayBuf);
+  return { buffer: Buffer.from(arrayBuf), contentType };
+}
+
+function delay(ms: number) {
+  return new Promise<void>(resolve => setTimeout(resolve, ms));
+}
+
+function getAdaptiveWidth(size: 'small' | 'medium' | 'large' = 'medium'): `${number}%` {
+  const env = process.env;
+  const premium = (
+    env.TERM_PROGRAM === 'iTerm.app' ||
+    env.TERM === 'xterm-kitty' ||
+    Boolean(env.KITTY_WINDOW_ID) ||
+    env.TERM_PROGRAM === 'WezTerm' ||
+    env.TERM_PROGRAM === 'konsole' ||
+    Boolean(env.KONSOLE_VERSION)
+  );
+
+  if (premium) {
+    if (size === 'small') return '85%';
+    if (size === 'large') return '100%';
+    return '90%';
+  }
+  // ANSI fallback environments
+  if (size === 'small') return '60%';
+  if (size === 'large') return '70%';
+  return '65%';
 }
 
 /**
@@ -144,7 +196,7 @@ async function fetchImageBuffer(url: string): Promise<Buffer> {
  */
 export const catImagesTool = {
   name: 'random-cat-images',
-  description: '🐱 Fetch and display random cat images in your terminal using ANSI rendering (no ASCII fallback).',
+  description: '🐱 Fetch and display random cat images in your terminal using Pixelpop (with GIF animation support).',
   category: 'fun' as const,
   parameters: catImageSchema,
   execute: async (params: CatImageParams) => {
